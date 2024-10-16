@@ -1,0 +1,43 @@
+import 'dart:convert';
+import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import '/flutter_flow/lat_lng.dart';
+import '/flutter_flow/place.dart';
+import '/flutter_flow/uploaded_file.dart';
+import '/flutter_flow/custom_functions.dart';
+import '/backend/backend.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '/backend/schema/structs/index.dart';
+import '/backend/supabase/supabase.dart';
+import '/auth/firebase_auth/auth_util.dart';
+
+double distancia(
+  LatLng place1,
+  LatLng place2, // Argumentos : Places
+) {
+  /// MODIFY CODE ONLY BELOW THIS LINE
+
+  double degreesToRadians(double degrees) {
+    return degrees * (math.pi / 180);
+  }
+
+  var earthRadius = 6371.0; // Raio da Terra em quilômetros
+
+  var dLat = degreesToRadians(place2.latitude - place1.latitude);
+  var dLng = degreesToRadians(place2.longitude - place1.longitude);
+
+  var a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+      math.cos(degreesToRadians(place1.latitude)) *
+          math.cos(degreesToRadians(place2.latitude)) *
+          math.sin(dLng / 2) *
+          math.sin(dLng / 2);
+
+  var c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+
+  return earthRadius * c; // Retorna a distância em quilômetros
+  /// MODIFY CODE ONLY ABOVE THIS LINE
+}
