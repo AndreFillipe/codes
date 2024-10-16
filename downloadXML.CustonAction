@@ -1,0 +1,22 @@
+import 'dart:html' as html;
+
+Future<String> baixarXML(
+  String xmlContent,
+  String nomeArquivo, // Strings = Arguments no Flutterflow.
+) async {
+  // Cria um blob com o conteúdo do arquivo XML
+  final blob = html.Blob([xmlContent], 'text/xml');
+
+  // Gera uma URL para o blob
+  final url = html.Url.createObjectUrlFromBlob(blob);
+
+  // Cria um elemento de âncora para iniciar o download
+  final anchor = html.AnchorElement(href: url)
+    ..setAttribute('download', nomeArquivo)
+    ..click(); // Inicia o download
+
+  // Libera a URL do blob após o uso
+  html.Url.revokeObjectUrl(url);
+
+  return "Download iniciado";
+}
