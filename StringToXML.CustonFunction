@@ -1,0 +1,109 @@
+import 'dart:convert';
+import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import '/flutter_flow/lat_lng.dart';
+import '/flutter_flow/place.dart';
+import '/flutter_flow/uploaded_file.dart';
+import '/flutter_flow/custom_functions.dart';
+import '/backend/backend.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '/backend/schema/structs/index.dart';
+import '/backend/supabase/supabase.dart';
+import '/auth/firebase_auth/auth_util.dart';
+
+String xmlDoPedidoFinal(
+  String tipopessoa,
+  String cpfcnpj,
+  String razaosocial,
+  String endereco,
+  String numero,
+  String bairro,
+  String cidade,
+  String uf,
+  String pais,
+  String cep,
+  String celular,
+  String numpedweb,
+  String datapedweb,
+  String horapedweb,
+  double totalpedweb,
+  double valorfrete,
+  String pagamento,
+  String dataentrega,
+  List<ProdutoDTStruct> produtos,
+) {
+  /// MODIFY CODE ONLY BELOW THIS LINE
+
+  String xml = '''
+<DADOS>
+  <DADOSCLIENTE>
+    <tipo_pessoa>$tipopessoa</tipo_pessoa>
+    <cpf_cnpj>$cpfcnpj</cpf_cnpj>
+    <razao_social>$razaosocial</razao_social>
+    <nome_fantasia></nome_fantasia>
+    <rg></rg>
+    <insc_est></insc_est>
+    <insc_mun></insc_mun>
+    <endereco>$endereco</endereco>
+    <numero>$numero</numero>
+    <complemento></complemento>
+    <bairro>$bairro</bairro>
+    <cidade>$cidade</cidade>
+    <uf>$uf</uf>
+    <pais>$pais</pais>
+    <cep>$cep</cep>
+    <data_cad></data_cad>
+    <data_nasc></data_nasc>
+    <telefone></telefone>
+    <celular>$celular</celular>
+    <email></email>
+    <contato></contato>
+    <sexo></sexo>
+    <observacao></observacao>
+    <filial></filial>
+    <hora_entrega></hora_entrega>
+  </DADOSCLIENTE>
+  <DADOSPEDIDO>
+    <num_ped_web>$numpedweb</num_ped_web>
+    <data_ped_web>$datapedweb</data_ped_web>
+    <hora_ped_web>$horapedweb</hora_ped_web>
+    <total_ped_web>${totalpedweb.toStringAsFixed(2)}</total_ped_web>
+    <desc_total_ped_web>0.000</desc_total_ped_web>
+    <acres_total_ped_web>0.000</acres_total_ped_web>
+    <valor_frete>${valorfrete.toStringAsFixed(2)}</valor_frete>
+    <pagamento>$pagamento</pagamento>
+    <data_entrega>$dataentrega</data_entrega>
+    <observacao></observacao>
+    <produtos>
+  ''';
+
+  for (var produto in produtos) {
+    xml += '''
+      <produto>
+        <codigo>${produto.codigo}</codigo>
+        <cod_barras>${produto.codbarras}</cod_barras>
+        <quantidade>${produto.quantidade.toStringAsFixed(3)}</quantidade>
+        <embalagem>${produto.embalagem.toStringAsFixed(3)}</embalagem>
+        <unid_medida>${produto.unidmedida}</unid_medida>
+        <valor_unit>${produto.valorunit.toStringAsFixed(2)}</valor_unit>
+        <desc_item>0.000</desc_item>
+        <acres_item>0.000</acres_item>
+        <total_item>${produto.totalitem.toStringAsFixed(2)}</total_item>
+      </produto>
+    ''';
+  }
+
+  xml += '''
+    </produtos>
+  </DADOSPEDIDO>
+</DADOS>
+''';
+
+  return xml;
+
+  /// MODIFY CODE ONLY ABOVE THIS LINE
+}
